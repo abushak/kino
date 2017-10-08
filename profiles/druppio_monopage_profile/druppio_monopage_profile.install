@@ -1,0 +1,478 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the druppio monopage installation profile.
+ */
+
+use Drupal\user\Entity\User;
+use Drupal\user\RoleInterface;
+use Drupal\node\Entity\Node;
+use Drupal\shortcut\Entity\Shortcut;
+use Drupal\block_content\Entity\BlockContent;
+use Drupal\Core\Block\BlockBase;
+use Drupal\block\Entity\Block;
+use Drupal\menu_link_content\Entity\MenuLinkContent;
+
+/**
+ * Implements hook_install().
+ *
+ * Perform actions to set up the site for this profile.
+ *
+ * @see system_install()
+ */
+function druppio_monopage_profile_install() {
+  // Set front page to "monopage".
+  \Drupal::configFactory()->getEditable('system.site')->set('page.front', '/monopage')->save(TRUE);
+
+  // Allow visitor account creation with administrative approval.
+  $user_settings = \Drupal::configFactory()->getEditable('user.settings');
+  $user_settings->set('register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)->save(TRUE);
+
+  // Enable default permissions for system roles.
+  user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access comments'));
+  user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, array('access comments', 'post comments', 'skip comment approval'));
+
+  // Assign user 1 the "administrator" role.
+  $user = User::load(1);
+  $user->roles[] = 'administrator';
+  $user->save();
+
+  // We install some menu links, so we have to rebuild the router, to ensure the
+  // menu links are valid.
+  \Drupal::service('router.builder')->rebuildIfNeeded();
+
+  // Enable the Contact link in the footer menu.
+  /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+  $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+  $menu_link_manager->updateDefinition('contact.site_page', array('enabled' => TRUE));
+
+  user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access site-wide contact form'));
+  user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, array('access site-wide contact form'));
+
+  // Allow authenticated users to use shortcuts.
+  user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, array('access shortcuts'));
+
+  // Populate the default shortcut set.
+  $shortcut = Shortcut::create(array(
+    'shortcut_set' => 'default',
+    'title' => t('Add content'),
+    'weight' => -20,
+    'link' => array('uri' => 'internal:/node/add'),
+  ));
+  $shortcut->save();
+
+  $shortcut = Shortcut::create(array(
+    'shortcut_set' => 'default',
+    'title' => t('All content'),
+    'weight' => -19,
+    'link' => array('uri' => 'internal:/admin/content'),
+  ));
+  $shortcut->save();
+
+  // Allow all users to use search.
+  user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('search content'));
+  user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, array('search content'));
+
+  // Enable the admin theme.
+  \Drupal::configFactory()->getEditable('node.settings')->set('use_admin_theme', TRUE)->save(TRUE);
+
+  // Set the path to the logo and favicon based on install directory.
+  $druppio_monopage_profile_path = drupal_get_path('profile', 'druppio_monopage_profile');
+  \Drupal::configFactory()
+    ->getEditable('system.theme.global')
+    ->set('logo', [
+      'path' => $druppio_monopage_profile_path . '/images/druppio_logo.png',
+      'url' => '',
+      'use_default' => FALSE,
+    ])
+    ->set('favicon', [
+      'mimetype' => 'image/vnd.microsoft.icon',
+      'path' =>  $druppio_monopage_profile_path . '/images/favicon.ico',
+      'url' => '',
+      'use_default' => FALSE,
+    ])
+    ->save(TRUE);
+
+  // Create all the content we need. ------------------------------------------>
+  $node = Node::create(array(
+    'type' => 'testimonial',
+    'title' => 'Mark Kuzmiczki, CEO of ROil, Russia',
+    'uid' => '1',
+    'status' => 1,
+    'promoted' => 1,
+    'path' => '/mark-kuzmiczki-ceo-roil-russia',
+  ));
+  $node->body->value = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque in ipsum id orci porta dapibus. Nulla porttitor accumsan tincidunt. Donec sollicitudin molestie malesuada. Sed porttitor lectus nibh. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus.</p>';
+  $node->body->format = 'basic_html';
+  $node->save();
+
+  $node = Node::create(array(
+    'type' => 'testimonial',
+    'title' => 'Marry Higgins, Head of Research',
+    'uid' => '1',
+    'status' => 1,
+    'promoted' => 1,
+    'path' => '/marry-higgins-head-research',
+  ));
+  $node->body->value = '<p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Nulla quis lorem ut libero malesuada feugiat. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus suscipit tortor eget felis porttitor volutpat.</p>';
+  $node->body->format = 'basic_html';
+  $node->save();
+
+  // Prepare images folder.
+  $destination = 'public://images';
+  file_prepare_directory($destination, FILE_CREATE_DIRECTORY);
+  $tmp_destination = 'public://tmp';
+  file_prepare_directory($tmp_destination, FILE_CREATE_DIRECTORY);
+
+  $output = file_get_contents($druppio_monopage_profile_path . '/images/photo-1464655646192-3cb2ace7a67e.jpg');
+  $file = file_save_data($output, $destination . '/photo-1464655646192-3cb2ace7a67e.jpg', FILE_EXISTS_REPLACE);
+  $node = Node::create(array(
+    'type' => 'article',
+    'title' => 'Share your experience',
+    'uid' => '1',
+    'status' => 1,
+    'promoted' => 1,
+    'path' => '/blog/share-your-experience',
+  ));
+  $body = '<p>Nulla porttitor accumsan tincidunt. Nulla quis lorem ut libero malesuada feugiat. Nulla quis lorem ut libero malesuada feugiat. Nulla porttitor accumsan tincidunt. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Nulla porttitor accumsan tincidunt. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi.</p><p>Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Donec rutrum congue leo eget malesuada. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur aliquet quam id dui posuere blandit. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Pellentesque in ipsum id orci porta dapibus. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Quisque velit nisi, pretium ut lacinia in, elementum id enim.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Nulla porttitor accumsan tincidunt. Donec sollicitudin molestie malesuada. Curabitur aliquet quam id dui posuere blandit.</p><p>Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Proin eget tortor risus. Sed porttitor lectus nibh. Curabitur aliquet quam id dui posuere blandit. Donec sollicitudin molestie malesuada. Curabitur aliquet quam id dui posuere blandit. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Pellentesque in ipsum id orci porta dapibus.</p>';
+  $summary = 'Nulla porttitor accumsan tincidunt. Nulla quis lorem ut libero malesuada feugiat. Nulla quis lorem ut libero malesuada feugiat. Nulla porttitor accumsan tincidunt. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;';
+  $node->body->setValue([
+    'value' => $body,
+    'summary' => $summary,
+    'format' => 'basic_html',
+  ]);
+  if ($file)
+    $node->field_image->setValue(array('target_id' => $file->id(), 'alt' => 'Stay focused'));
+  $node->save();
+  $node->save();
+
+  $output = file_get_contents($druppio_monopage_profile_path . '/images/Lt0DwxdqRKSQkX7439ey_Chaz_fisheye-11.jpg');
+  $file = file_save_data($output, $destination . '/Lt0DwxdqRKSQkX7439ey_Chaz_fisheye-11.jpg', FILE_EXISTS_REPLACE);
+  $node = Node::create(array(
+    'type' => 'article',
+    'title' => 'Stay focused',
+    'uid' => '1',
+    'status' => 1,
+    'promoted' => 1,
+    'path' => '/blog/stay-focused',
+  ));
+  $node->body->value = '<p>Curabitur aliquet quam id dui posuere blandit. Cras ultricies ligula sed magna dictum porta. Sed porttitor lectus nibh. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus.</p><p>Curabitur aliquet quam id dui posuere blandit. Cras ultricies ligula sed magna dictum porta. Sed porttitor lectus nibh. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Curabitur aliquet quam id dui posuere blandit. Cras ultricies ligula sed magna dictum porta. Sed porttitor lectus nibh. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Curabitur aliquet quam id dui posuere blandit. Cras ultricies ligula sed magna dictum porta. Sed porttitor lectus nibh. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Curabitur aliquet quam id dui posuere blandit. Cras ultricies ligula sed magna dictum porta. Sed porttitor lectus nibh. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus.</p>';
+  $node->body->format = 'basic_html';
+  if ($file)
+    $node->field_image->setValue(array('target_id' => $file->id(), 'alt' => 'Stay focused'));
+  $node->save();
+
+  $output = file_get_contents($druppio_monopage_profile_path . '/images/services-01_0.jpg');
+  $file = file_save_data($output, $destination . '/services-01_0.jpg', FILE_EXISTS_REPLACE);
+  $node = Node::create(array(
+    'type' => 'service',
+    'title' => 'production',
+    'uid' => '1',
+    'status' => 1,
+    'promoted' => 1,
+    'sticky' => 1,
+    'path' => '/production',
+  ));
+  $node->body->value = '<p>Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Nulla porttitor accumsan tincidunt. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.</p>';
+  $node->body->format = 'basic_html';
+  if ($file)
+    $node->field_images->setValue(array('target_id' => $file->id(), 'alt' => 'production'));
+  $node->save();
+
+  $output = file_get_contents($druppio_monopage_profile_path . '/images/services-03_0.jpg');
+  $file = file_save_data($output, $destination . '/services-03_0.jpg', FILE_EXISTS_REPLACE);
+  $node = Node::create(array(
+    'type' => 'service',
+    'title' => 'prototyping',
+    'uid' => '1',
+    'status' => 1,
+    'promoted' => 1,
+    'sticky' => 1,
+    'path' => '/prototyping',
+  ));
+  $node->body->value = '<p>Pellentesque in ipsum id orci porta dapibus. Curabitur aliquet quam id dui posuere blandit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla porttitor accumsan tincidunt.</p>';
+  $node->body->format = 'basic_html';
+  if ($file)
+    $node->field_images->setValue(array('target_id' => $file->id(), 'alt' => 'prototyping'));
+  $node->save();
+
+  $output = file_get_contents($druppio_monopage_profile_path . '/images/photo-1456894332557-b03dc5cf60d5.jpg');
+  $file = file_save_data($output, $destination . '/photo-1456894332557-b03dc5cf60d5.jpg', FILE_EXISTS_REPLACE);
+  $node = Node::create(array(
+    'type' => 'service',
+    'title' => 'planning',
+    'uid' => '1',
+    'status' => 1,
+    'promoted' => 1,
+    'sticky' => 1,
+    'path' => '/planning',
+  ));
+  $node->body->value = '<p>Cras ultricies ligula sed magna dictum porta. Nulla porttitor accumsan tincidunt. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Nulla quis lorem ut libero malesuada feugiat. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus.</p>';
+  $node->body->format = 'basic_html';
+  if ($file)
+    $node->field_images->setValue(array('target_id' => $file->id(), 'alt' => 'planning'));
+  $node->save();
+
+  $node = Node::create(array(
+    'type' => 'quick_link',
+    'title' => 'Just copy Font Awesome code',
+    'uid' => '1',
+    'status' => 1,
+    'promoted' => 1,
+    'path' => '/just-copy-font-awesome-code',
+  ));
+  $node->body->value = '<p>You do not need to upload icon, just find your Font Awesome icon is copy/paste the code.</p>';
+  $node->body->format = 'basic_html';
+  $node->field_color = '';
+  $node->field_icon_code = 'fa-fort-awesome';
+  $node->field_link = 'http://www.druppio.com';
+  $node->save();
+
+  $node = Node::create(array(
+    'type' => 'quick_link',
+    'title' => 'Bootstrap framework',
+    'uid' => '1',
+    'status' => 1,
+    'promoted' => 1,
+    'path' => '/bootstrap-framework',
+  ));
+  $node->body->value = '<p>Bootstrap is the most popular HTML, CSS, and JS framework for developing responsive, mobile first projects on the web.</p>';
+  $node->body->format = 'full_html';
+  $node->field_color = '#21624C';
+  $node->field_icon_code = 'fa-code';
+  $node->field_link = 'http://www.druppio.com';
+  $node->save();
+
+  $node = Node::create(array(
+    'type' => 'quick_link',
+    'title' => 'Premium support',
+    'uid' => '1',
+    'status' => 1,
+    'promoted' => 1,
+    'path' => '/premium-support',
+  ));
+  $node->body->value = '<p>You will get answer within 24 hours.</p>';
+  $node->body->format = 'basic_html';
+  $node->field_color = '#936C31';
+  $node->field_icon_code = 'fa-life-ring';
+  $node->field_link = 'http://www.druppio.com';
+  $node->save();
+
+  $node = Node::create(array(
+    'type' => 'page',
+    'title' => 'Terms and conditions',
+    'uid' => '1',
+    'status' => 1,
+    'promoted' => 0,
+    'path' => '/terms-and-conditions',
+  ));
+  $node->body->value = '<p>Nulla porttitor accumsan tincidunt. Cras ultricies ligula sed magna dictum porta. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec rutrum congue leo eget malesuada. Donec sollicitudin molestie malesuada. Pellentesque in ipsum id orci porta dapibus. Donec rutrum congue leo eget malesuada. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p><p>Cras ultricies ligula sed magna dictum porta. Sed porttitor lectus nibh. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Pellentesque in ipsum id orci porta dapibus. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Cras ultricies ligula sed magna dictum porta. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem.</p><p>Proin eget tortor risus. Donec rutrum congue leo eget malesuada. Pellentesque in ipsum id orci porta dapibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur aliquet quam id dui posuere blandit. Pellentesque in ipsum id orci porta dapibus. Nulla porttitor accumsan tincidunt. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Proin eget tortor risus. Curabitur aliquet quam id dui posuere blandit.</p><p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Vivamus suscipit tortor eget felis porttitor volutpat. Sed porttitor lectus nibh. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Sed porttitor lectus nibh. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Pellentesque in ipsum id orci porta dapibus. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Sed porttitor lectus nibh. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus.</p><p>Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Donec sollicitudin molestie malesuada. Sed porttitor lectus nibh. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Proin eget tortor risus. Nulla quis lorem ut libero malesuada feugiat. Curabitur aliquet quam id dui posuere blandit. Sed porttitor lectus nibh. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi.</p><p>Nulla porttitor accumsan tincidunt. Cras ultricies ligula sed magna dictum porta. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec rutrum congue leo eget malesuada. Donec sollicitudin molestie malesuada. Pellentesque in ipsum id orci porta dapibus. Donec rutrum congue leo eget malesuada. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p><p>Cras ultricies ligula sed magna dictum porta. Sed porttitor lectus nibh. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Pellentesque in ipsum id orci porta dapibus. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Cras ultricies ligula sed magna dictum porta. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem.</p><p>Proin eget tortor risus. Donec rutrum congue leo eget malesuada. Pellentesque in ipsum id orci porta dapibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur aliquet quam id dui posuere blandit. Pellentesque in ipsum id orci porta dapibus. Nulla porttitor accumsan tincidunt. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Proin eget tortor risus. Curabitur aliquet quam id dui posuere blandit.</p><p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Vivamus suscipit tortor eget felis porttitor volutpat. Sed porttitor lectus nibh. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Sed porttitor lectus nibh. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Pellentesque in ipsum id orci porta dapibus. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Sed porttitor lectus nibh. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus.</p><p>Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Donec sollicitudin molestie malesuada. Sed porttitor lectus nibh. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Proin eget tortor risus. Nulla quis lorem ut libero malesuada feugiat. Curabitur aliquet quam id dui posuere blandit. Sed porttitor lectus nibh. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi.</p>';
+  $node->body->format = 'basic_html';
+  $node->save();
+
+  $node = Node::create(array(
+    'type' => 'page',
+    'title' => 'Privacy policies',
+    'uid' => '1',
+    'status' => 1,
+    'promoted' => 0,
+    'path' => '/privacy-policies',
+  ));
+  $node->body->value = '<p>Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Donec rutrum congue leo eget malesuada. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Donec sollicitudin molestie malesuada. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Cras ultricies ligula sed magna dictum porta. Donec rutrum congue leo eget malesuada.</p><p>Sed porttitor lectus nibh. Sed porttitor lectus nibh. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Donec sollicitudin molestie malesuada. Pellentesque in ipsum id orci porta dapibus. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Proin eget tortor risus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Proin eget tortor risus. Vivamus suscipit tortor eget felis porttitor volutpat.</p><p>Donec sollicitudin molestie malesuada. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Curabitur aliquet quam id dui posuere blandit. Sed porttitor lectus nibh. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Pellentesque in ipsum id orci porta dapibus. Pellentesque in ipsum id orci porta dapibus. Proin eget tortor risus. Nulla quis lorem ut libero malesuada feugiat. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.</p><p>Proin eget tortor risus. Donec rutrum congue leo eget malesuada. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur aliquet quam id dui posuere blandit. Curabitur aliquet quam id dui posuere blandit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus.</p>';
+  $node->body->format = 'basic_html';
+  $node->save();
+
+  $node = Node::create(array(
+    'type' => 'page',
+    'title' => 'monoPage',
+    'uid' => '1',
+    'status' => 1,
+    'promoted' => 0,
+    'path' => '/monopage',
+  ));
+  $node->body->value = '';
+  $node->body->format = 'basic_html';
+  $node->save();
+
+  $node = Node::create(array(
+    'type' => 'page',
+    'title' => 'About Us',
+    'uid' => '1',
+    'status' => 1,
+    'promoted' => 0,
+    'path' => '/about-us',
+  ));
+  $node->body->value = '<p>Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ultricies ligula sed magna dictum porta. Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Nulla porttitor accumsan tincidunt. Vivamus suscipit tortor eget felis porttitor volutpat. Proin eget tortor risus. Vivamus suscipit tortor eget felis porttitor volutpat. Nulla quis lorem ut libero malesuada feugiat.</p><p>Proin eget tortor risus. Curabitur aliquet quam id dui posuere blandit. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Proin eget tortor risus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Cras ultricies ligula sed magna dictum porta. Nulla quis lorem ut libero malesuada feugiat. Donec sollicitudin molestie malesuada. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Cras ultricies ligula sed magna dictum porta.</p><p>Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Curabitur aliquet quam id dui posuere blandit. Donec rutrum congue leo eget malesuada. Donec rutrum congue leo eget malesuada. Nulla porttitor accumsan tincidunt. Donec rutrum congue leo eget malesuada. Pellentesque in ipsum id orci porta dapibus. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Pellentesque in ipsum id orci porta dapibus. Proin eget tortor risus.</p><p>Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Curabitur aliquet quam id dui posuere blandit. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Donec sollicitudin molestie malesuada. Sed porttitor lectus nibh. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus.</p>';
+  $node->body->format = 'basic_html';
+  $node->save();
+
+  $output = file_get_contents($druppio_monopage_profile_path . '/images/photo-01.jpg');
+  $file = file_save_data($output, $destination . '/photo-01.jpg', FILE_EXISTS_REPLACE);
+  $node = Node::create(array(
+    'type' => 'header_image',
+    'title' => 'We build creativity',
+    'uid' => '1',
+    'status' => 1,
+    'promoted' => 1,
+    'path' => '/we-build-creativity',
+  ));
+  $node->body->value = '<p>With custom Drupal solutions. From basic<br />one-page sites to complex web applications</p>';
+  $node->body->format = 'basic_html';
+  if ($file)
+    $node->field_image->setValue(array('target_id' => $file->id(), 'alt' => 'We build creativity'));
+  $node->save();
+
+  // Blocks.
+  $block_content = entity_create('block_content', array(
+    'info' => 'Get in touch contact details',
+    'type' => 'basic',
+    'langcode' => 'en',
+    'body' => array(
+      'value' => '<div><i class="fa fa-home" aria-hidden="true"></i>Studio Present inc.</div>
+                  <div><i class="fa fa-flag" aria-hidden="true"></i>Trg Slobode 2, Subotica, Serbia</div>
+                  <div><i class="fa fa-phone" aria-hidden="true"></i>+381/24-552-105</div>
+                  <div><i class="fa fa-envelope-o" aria-hidden="true"></i>info@druppio.com</div>',
+      'format' => 'full_html',
+    ),
+  ));
+  $block_content->save();
+  $block = Block::create(array(
+    'id' => 'getintouchcontactdetails',
+    'plugin' => 'block_content:' . $block_content->uuid(),
+    'region' => 'footer',
+    'provider' => 'block_content',
+    // 'weight' => -100,
+    'theme' => 'druppio_monopage',
+    'visibility' => array(),
+    'settings' => array(
+      'label' => 'Get in touch contact details',
+      'label_display' => TRUE,
+      ),
+    )
+  );
+  $block->save();
+
+  $output = file_get_contents($druppio_monopage_profile_path . '/images/photo-03.jpg');
+  $file = file_save_data($output, $destination . '/photo-03.jpg', FILE_EXISTS_REPLACE);
+  $output2 = file_get_contents($druppio_monopage_profile_path . '/images/photo-02.jpg');
+  $file2 = file_save_data($output2, $destination . '/photo-02.jpg', FILE_EXISTS_REPLACE);
+  $block_content = entity_create('block_content', array(
+    'info' => 'Druppio MonoPage theme',
+    'type' => 'basic_block_with_image',
+    'langcode' => 'en',
+    'body' => array(
+      'value' => '<p>You do not need any programming skills to change texts or images. It is user friendly and easy to use.<br />This one-page style theme is bundled with plenty of cool features, effects.</p>',
+      'format' => 'basic_html',
+    )
+  ));
+  if ($file)
+    $block_content->field_image->setValue(array('target_id' => $file->id(), 'alt' => 'Monopage'));
+  if ($file2)
+    $block_content->field_background_image->setValue(array('target_id' => $file2->id(), 'alt' => 'Monopage'));
+  $block_content->save();
+  $block = Block::create(array(
+    'id' => 'whywemakewoodentoysandhow',
+    'plugin' => 'block_content:' . $block_content->uuid(),
+    'region' => 'top_bar',
+    'provider' => 'block_content',
+    // 'weight' => -100,
+    'theme' => 'druppio_monopage',
+    'visibility' => array(
+      'request_path' => array(
+        'id' => 'request_path',
+        'pages' => '<front>',
+        'negate' => false
+      ),
+    ),
+    'settings' => array(
+      'label' => 'MonoPage - Druppio one-page style theme',
+      'label_display' => TRUE,
+      ),
+    )
+  );
+  $block->save();
+
+  $block_content = entity_create('block_content', array(
+    'info' => 'Copyright Block',
+    'type' => 'basic',
+    'langcode' => 'en',
+    'body' => array(
+      'value' => '<p>Copyright © 2016 <a href="http://www.druppio.com/">Druppio</a>. All rights reserved.</p>',
+      'format' => 'full_html',
+    ),
+  ));
+  $block_content->save();
+  $block = Block::create(array(
+    'id' => 'druppio_business_copyright',
+    'plugin' => 'block_content:' . $block_content->uuid(),
+    'region' => 'footer_credits',
+    'provider' => 'block_content',
+    // 'weight' => -100,
+    'theme' => 'druppio_monopage',
+    'visibility' => array(),
+    'settings' => array(
+      'label' => '',
+      'label_display' => TRUE,
+      ),
+    )
+  );
+  $block->save();
+
+  $block_content = entity_create('block_content', array(
+    'info' => 'Credits Block',
+    'type' => 'basic',
+    'langcode' => 'en',
+    'body' => array(
+      'value' => '<p><a href="http://www.studiopresent.com/">Studio Present</a></p>',
+      'format' => 'full_html',
+    ),
+  ));
+  $block_content->save();
+
+  $block_content = entity_create('block_content', array(
+    'info' => 'Jobs board',
+    'type' => 'basic',
+    'langcode' => 'en',
+    'body' => array(
+      'value' => '<p>We are always looking for great talented people to join our growing network.</p><p><a href="#">See jobs list</a></p>',
+      'format' => 'basic_html',
+    ),
+  ));
+  $block_content->save();
+
+  $home_link = MenuLinkContent::create([
+      'title' => 'Home',
+      'link' => ['uri' => 'internal:/'],
+      'menu_name' => 'main',
+      'expanded' => TRUE,
+      'weight'     => -100,
+  ]);
+  $home_link->save();
+
+  $about_us_link = MenuLinkContent::create([
+      'title' => 'About Us',
+      'link' => ['uri' => 'internal:/about-us'],
+      'menu_name' => 'main',
+      'expanded' => TRUE,
+      'weight'     => 1,
+  ]);
+  $about_us_link->save();
+
+  $contact_link = MenuLinkContent::create([
+      'title' => 'Contact',
+      'link' => ['uri' => 'internal:/#block-contactblock'],
+      'menu_name' => 'main',
+      'expanded' => TRUE,
+      'weight'     => 2
+  ]);
+  $contact_link->save();
+
+  $submenu_item = MenuLinkContent::create([
+    'title' => 'Sub menu example',
+    'link' => ['uri' => 'internal:/'],
+    'parent' => $about_us_link->getPluginId(),
+    'expanded' => TRUE,
+  ]);
+  $submenu_item->save();
+
+}

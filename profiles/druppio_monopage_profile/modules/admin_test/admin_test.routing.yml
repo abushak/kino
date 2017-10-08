@@ -1,0 +1,7 @@
+admin_test.admin_test:
+  path: '/admin/test'
+  defaults:
+    _controller: '\Drupal\admin_test\Controller\TestController::adminTest'
+    _title: 'Admin Test'
+  requirements:
+    _permission: 'access content'

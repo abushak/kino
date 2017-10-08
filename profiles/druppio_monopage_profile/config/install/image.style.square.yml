@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies: {  }
+name: square
+label: square
+effects:
+  2d1580ae-0c11-42a3-8eea-9b5f4610fc44:
+    uuid: 2d1580ae-0c11-42a3-8eea-9b5f4610fc44
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 380
+      height: 380

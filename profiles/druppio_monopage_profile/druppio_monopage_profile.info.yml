@@ -1,0 +1,63 @@
+name: Druppio Monopage Profile
+type: profile
+description: 'Druppio Monopage installation profile.'
+core: 8.x
+
+distribution:
+  name: Druppio Monopage
+
+dependencies:
+  - node
+  - history
+  - block
+  - breakpoint
+  - ckeditor
+  - color
+  - config
+  - comment
+  - contextual
+  - contact
+  - menu_link_content
+  - datetime
+  - block_content
+  - quickedit
+  - editor
+  - help
+  - image
+  - menu_ui
+  - options
+  - path
+  - page_cache
+  - dynamic_page_cache
+  - taxonomy
+  - dblog
+  - search
+  - shortcut
+  - toolbar
+  - field_ui
+  - file
+  - rdf
+  - views
+  - views_ui
+  - tour
+  - automated_cron
+  - admin_toolbar
+  - admin_toolbar_tools
+  - color_field
+  - contact_block
+  - ctools
+  - eck
+  - image_url_formatter
+  - menu_link_attributes
+  - metatag
+  - pathauto
+  - rules
+  - seckit
+  - token
+  - views_slideshow
+  - views_slideshow_cycle
+  - easy_social
+themes:
+  - druppio_monopage
+  - bartik
+  - seven

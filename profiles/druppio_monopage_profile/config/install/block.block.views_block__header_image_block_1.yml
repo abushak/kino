@@ -1,0 +1,29 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.header_image
+  module:
+    - system
+    - views
+  theme:
+    - druppio_monopage
+id: views_block__header_image_block_1
+theme: druppio_monopage
+region: slideshow
+weight: -9
+provider: null
+plugin: 'views_block:header_image-block_1'
+settings:
+  id: 'views_block:header_image-block_1'
+  label: ''
+  provider: views
+  label_display: '0'
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

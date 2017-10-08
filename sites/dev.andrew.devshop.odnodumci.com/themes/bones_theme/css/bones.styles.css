@@ -1,0 +1,793 @@
+/* line 1, ../sass/bones.styles.scss */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, form, input,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  box-sizing: border-box;
+}
+
+/* line 38, ../sass/variables/_grid.scss */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* line 45, ../sass/variables/_grid.scss */
+html, body {
+  min-height: 100%;
+}
+
+/* line 49, ../sass/variables/_grid.scss */
+body {
+  color: #414141;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 100%;
+  font-weight: 100;
+  line-height: 1.5;
+}
+
+/* line 58, ../sass/variables/_grid.scss */
+h1, h2, h3, h4, h5, h6, p, ol, ul {
+  margin-bottom: 20px;
+}
+
+/* line 63, ../sass/variables/_grid.scss */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 300;
+  letter-spacing: 2px;
+}
+
+/* line 69, ../sass/variables/_grid.scss */
+a {
+  color: #01579B;
+}
+
+/* line 74, ../sass/variables/_grid.scss */
+.container {
+  max-width: 1200px;
+  width: 90%;
+  margin: auto;
+}
+/* line 20, ../sass/variables/_grid.scss */
+.container:before, .container:after {
+  content: " ";
+  display: table;
+}
+/* line 25, ../sass/variables/_grid.scss */
+.container:after {
+  clear: both;
+}
+
+/* line 20, ../sass/variables/_grid.scss */
+.layout-container:before, .layout-container:after {
+  content: " ";
+  display: table;
+}
+/* line 25, ../sass/variables/_grid.scss */
+.layout-container:after {
+  clear: both;
+}
+/* line 88, ../sass/variables/_grid.scss */
+.layout-container:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+/* line 94, ../sass/variables/_grid.scss */
+.layout-container__titllayoute {
+  margin-bottom: 6px;
+}
+
+/* line 98, ../sass/variables/_grid.scss */
+.main,
+.sidebar {
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 3px solid #B3E5FC;
+}
+@media screen and (min-width: 768px) {
+  /* line 98, ../sass/variables/_grid.scss */
+  .main,
+  .sidebar {
+    min-height: 300px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  /* line 112, ../sass/variables/_grid.scss */
+  .layout-container .main {
+    width: 50%;
+    float: left;
+    margin-left: 25%;
+    margin-right: -100%;
+  }
+}
+@media screen and (min-width: 768px) {
+  /* line 117, ../sass/variables/_grid.scss */
+  .layout-container .filter-wr, .layout-container .region-footer {
+    width: 75%;
+    float: left;
+    margin-left: 11%;
+    margin-right: -100%;
+  }
+}
+/* line 123, ../sass/variables/_grid.scss */
+.layout-container #user-login-form {
+  width: 20%;
+  color: red;
+}
+@media screen and (min-width: 768px) {
+  /* line 130, ../sass/variables/_grid.scss */
+  .layout-container .layout-left-sidebar {
+    width: 20%;
+    float: left;
+    margin-right: 1.69492%;
+  }
+}
+@media screen and (min-width: 768px) {
+  /* line 136, ../sass/variables/_grid.scss */
+  .layout-container .layout-right-sidebar {
+    width: 20%;
+    float: right;
+    margin-right: 0;
+  }
+}
+
+/* line 1, ../sass/base/_footer.scss */
+footer .footer-wr {
+  margin: 0 auto;
+  height: 160px;
+  background-color: #c4003e !important;
+  bottom: 0;
+  margin-top: 100px;
+}
+
+/* line 12, ../sass/base/_footer.scss */
+.region-footer {
+  margin-top: 30px;
+}
+/* line 13, ../sass/base/_footer.scss */
+.region-footer ul.menu {
+  margin-top: 40px;
+  width: 65%;
+  float: right;
+}
+
+/* line 1, ../sass/base/_header.scss */
+header .region-header {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* line 8, ../sass/base/_header.scss */
+.block-system-branding-block {
+  max-width: 100px;
+}
+
+/* line 1, ../sass/base/_media.scss */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* line 6, ../sass/base/_media.scss */
+svg {
+  max-height: 100%;
+  height: auto;
+}
+
+/* line 2, ../sass/base/_page.scss */
+body {
+  height: 100%;
+  min-height: 100%;
+}
+
+/* line 8, ../sass/base/_page.scss */
+main .main-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* line 14, ../sass/base/_page.scss */
+.center {
+  margin-left: 33%;
+  margin-top: 10%;
+}
+
+/* line 19, ../sass/base/_page.scss */
+#edit-contact {
+  display: none;
+}
+
+/* line 20, ../sass/base/_page.scss */
+#edit-mail {
+  width: 100%;
+  border: 1px #ccc solid;
+  border-radius: 3px;
+  padding: 5px;
+  font-size: 15px;
+}
+
+/* line 32, ../sass/base/_page.scss */
+#edit-field-aim-wrapper > div > label, #edit-field-gender-wrapper > div > label, #edit-field-age-wrapper > div > label {
+  color: cyan;
+}
+
+/* line 34, ../sass/base/_page.scss */
+#top_part {
+  background: url(../assets/logo.png) no-repeat;
+  height: 110px;
+}
+
+/* line 39, ../sass/base/_page.scss */
+.path-frontpage, .role-anonymous {
+  background: url(../assets/bg.jpg);
+}
+/* line 41, ../sass/base/_page.scss */
+.path-frontpage .page-title, .role-anonymous .page-title {
+  display: none;
+}
+/* line 42, ../sass/base/_page.scss */
+.path-frontpage .views-element-container, .role-anonymous .views-element-container {
+  display: none;
+}
+/* line 43, ../sass/base/_page.scss */
+.path-frontpage label.option, .role-anonymous label.option {
+  color: white;
+}
+/* line 44, ../sass/base/_page.scss */
+.path-frontpage #block-bones-local-tasks > nav > ul > li.is-active, .role-anonymous #block-bones-local-tasks > nav > ul > li.is-active {
+  display: none;
+}
+/* line 45, ../sass/base/_page.scss */
+.path-frontpage #block-bones-local-tasks > nav > ul > li:nth-child(2) > a, .role-anonymous #block-bones-local-tasks > nav > ul > li:nth-child(2) > a {
+  color: white;
+  border-bottom: none;
+}
+/* line 46, ../sass/base/_page.scss */
+.path-frontpage #block-bones-local-tasks > nav > ul > li:nth-child(3) > a, .role-anonymous #block-bones-local-tasks > nav > ul > li:nth-child(3) > a {
+  color: white;
+  border-bottom: none;
+}
+/* line 47, ../sass/base/_page.scss */
+.path-frontpage #block-bones-local-tasks > nav > ul, .role-anonymous #block-bones-local-tasks > nav > ul {
+  text-align: center;
+  width: 95%;
+}
+/* line 48, ../sass/base/_page.scss */
+.path-frontpage .tabs a:focus, .path-frontpage .tabs a:hover, .role-anonymous .tabs a:focus, .role-anonymous .tabs a:hover {
+  background-color: none !important;
+  color: #c4003e !important;
+}
+/* line 49, ../sass/base/_page.scss */
+.path-frontpage #user-pass > p, .role-anonymous #user-pass > p {
+  color: beige;
+  margin-top: 10px;
+}
+/* line 50, ../sass/base/_page.scss */
+.path-frontpage .chosen-container-multi, .path-frontpage #edit_field_age_chosen, .role-anonymous .chosen-container-multi, .role-anonymous #edit_field_age_chosen {
+  float: right;
+}
+/* line 51, ../sass/base/_page.scss */
+.path-frontpage #edit-mail--description, .path-frontpage #edit-name--description, .path-frontpage #edit-pass--description, .role-anonymous #edit-mail--description, .role-anonymous #edit-name--description, .role-anonymous #edit-pass--description {
+  display: none;
+}
+
+/* line 57, ../sass/base/_page.scss */
+.chosen-choices {
+  border-radius: 5px;
+}
+
+/* line 61, ../sass/base/_page.scss */
+.path-frontpage .user-logged-in {
+  background: white !important;
+}
+
+/* line 64, ../sass/base/_page.scss */
+.user-logged-in path-user {
+  background: white !important;
+}
+
+/* line 68, ../sass/base/_page.scss */
+#auth_box #middle_part {
+  border-radius: 0px;
+  box-shadow: none;
+  background: none;
+}
+/* line 69, ../sass/base/_page.scss */
+#auth_box .item-list li {
+  list-style: none;
+}
+/* line 70, ../sass/base/_page.scss */
+#auth_box label.edit-persistent-login {
+  color: white;
+}
+
+/* line 74, ../sass/base/_page.scss */
+#auth_box input[type="text"], #auth_box input[type="password"] {
+  width: 100%;
+}
+
+/* line 80, ../sass/base/_page.scss */
+.button {
+  background-color: #c4003e;
+  background-image: none;
+  border: none;
+  text-shadow: none;
+  min-height: 40px;
+  padding: 0 15px;
+  line-height: 38px;
+  font-size: 16px;
+  border-radius: 5px;
+  width: 100%;
+}
+
+/* line 92, ../sass/base/_page.scss */
+.button:hover {
+  background-color: rgba(158, 0, 93, 0.3);
+}
+
+/* line 95, ../sass/base/_page.scss */
+#auth_box input[type="submit"] {
+  float: none;
+  color: white;
+}
+
+/* line 100, ../sass/base/_page.scss */
+.create-account-link, .request-password-link {
+  color: white;
+  text-decoration: none;
+  border-bottom: none;
+}
+
+/* line 105, ../sass/base/_page.scss */
+.create-account-link:hover, .request-password-link:hover {
+  color: #eedbe6;
+}
+
+/* line 108, ../sass/base/_page.scss */
+.user-logged-in #top_part {
+  float: left;
+  width: 35%;
+  background: url(../assets/logo_s.png) no-repeat;
+}
+
+/* line 110, ../sass/base/_page.scss */
+header {
+  background-color: #e2939a;
+}
+
+/* line 113, ../sass/base/_page.scss */
+.logo {
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+/* line 115, ../sass/base/_page.scss */
+.block-system-branding-block {
+  float: left;
+  max-width: 300px;
+  margin-top: 25px;
+}
+
+/* line 116, ../sass/base/_page.scss */
+header .region-header {
+  height: 150px;
+}
+
+/* line 117, ../sass/base/_page.scss */
+ul.menu {
+  float: right;
+  width: 40%;
+  margin-top: 60px;
+}
+
+/* line 118, ../sass/base/_page.scss */
+ul.menu li {
+  display: inline;
+  margin-right: 15px;
+  width: 50px;
+}
+
+/* line 119, ../sass/base/_page.scss */
+.menu-item {
+  padding-top: 2.3em;
+  padding-right: 12px;
+}
+
+/* line 120, ../sass/base/_page.scss */
+.menu a {
+  color: white;
+  border-bottom: none;
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+/* line 121, ../sass/base/_page.scss */
+#block-bones-account-menu > ul > li:nth-child(1) {
+  background: url(../assets/menu2.png) no-repeat;
+  cursor: pointer;
+  position: relative;
+}
+/* line 124, ../sass/base/_page.scss */
+#block-bones-account-menu > ul > li:nth-child(1) a {
+  margin-left: -12px;
+  margin-top: 5px;
+}
+
+/* line 127, ../sass/base/_page.scss */
+#block-bones-account-menu > ul > li:nth-child(6) {
+  background: url(../assets/menu6.png) no-repeat;
+  cursor: pointer;
+}
+
+/* line 129, ../sass/base/_page.scss */
+#block-bones-account-menu > ul > li:nth-child(2) {
+  background: url(../assets/menu3.png) no-repeat;
+  cursor: pointer;
+}
+/* line 130, ../sass/base/_page.scss */
+#block-bones-account-menu > ul > li:nth-child(2) a {
+  margin-left: 4px;
+}
+
+/* line 132, ../sass/base/_page.scss */
+#block-bones-account-menu > ul > li:nth-child(4) {
+  background: url(../assets/menu5.png) no-repeat;
+  cursor: pointer;
+}
+/* line 133, ../sass/base/_page.scss */
+#block-bones-account-menu > ul > li:nth-child(4) a {
+  margin-left: -2px;
+}
+
+/* line 135, ../sass/base/_page.scss */
+#block-bones-account-menu > ul > li:nth-child(5) {
+  background: url(../assets/menu6.png) no-repeat;
+  cursor: pointer;
+}
+
+/* line 136, ../sass/base/_page.scss */
+#block-bones-account-menu > ul > li:nth-child(3) {
+  background: url(../assets/menu4.png) no-repeat;
+  cursor: pointer;
+}
+
+/* line 137, ../sass/base/_page.scss */
+.ifc #ifc-app-container.ifc-light #ifc-launcher-app .ifc-launcher-container .ifc-launcher .ifc-launcher-welcome-box {
+  display: none !important;
+}
+
+/* line 138, ../sass/base/_page.scss */
+.ifc #ifc-app-container.ifc-light #ifc-launcher-app .ifc-launcher-container .ifc-launcher .ifc-launcher-button {
+  background-color: none !important;
+  webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  color: #fff;
+}
+
+/* line 149, ../sass/base/_page.scss */
+.ifc #ifc-app-container #ifc-launcher-app .ifc-launcher-container .ifc-launcher .ifc-launcher-button {
+  font-size: 38px !important;
+}
+
+/* line 150, ../sass/base/_page.scss */
+.chat-messages {
+  z-index: 9999;
+}
+
+/* line 151, ../sass/base/_page.scss */
+#block-chatblock {
+  width: 70px;
+  height: 70px;
+}
+
+/* line 152, ../sass/base/_page.scss */
+.form-item-field-age-value, .form-item-field-gender-value, .form-item-field-aim-target-id {
+  width: 17%;
+}
+
+/* line 154, ../sass/base/_page.scss */
+.ifc-launcher .ifc-launcher-button {
+  background-color: #e2939a !important;
+}
+
+/* line 160, ../sass/base/_page.scss */
+.ifc-window-message-received .ifc-chat-window-message-body {
+  background-color: #00f0c4 !important;
+}
+
+/* line 162, ../sass/base/_page.scss */
+.ifc-branding {
+  display: none !important;
+}
+
+/* line 163, ../sass/base/_page.scss */
+.user-filter {
+  background-color: #f6d3d5;
+  height: 160px;
+}
+
+/* line 167, ../sass/base/_page.scss */
+.filter-wr {
+  padding: 20px;
+}
+/* line 169, ../sass/base/_page.scss */
+.filter-wr .js-form-wrapper {
+  width: 10%;
+  float: left;
+}
+/* line 170, ../sass/base/_page.scss */
+.filter-wr .button {
+  color: white;
+  margin-left: 52%;
+}
+/* line 171, ../sass/base/_page.scss */
+.filter-wr .js-form-item {
+  float: left;
+}
+/* line 172, ../sass/base/_page.scss */
+.filter-wr #edit-actions {
+  margin-top: 32px;
+}
+
+/* line 174, ../sass/base/_page.scss */
+.form--inline .form-actions {
+  clear: none !important;
+}
+
+/* line 177, ../sass/base/_page.scss */
+.bef-exposed-form .form--inline > .form-item {
+  margin-left: 7% !important;
+}
+
+/* line 179, ../sass/base/_page.scss */
+.pager__item {
+  width: 15.25424%;
+  float: left;
+  margin-right: 1.69492%;
+  margin-left: 42.37288%;
+  margin-top: 20px;
+}
+/* line 183, ../sass/base/_page.scss */
+.pager__item .button {
+  padding: 10px 15px;
+}
+
+/* line 186, ../sass/base/_page.scss */
+#block-bones-content > div > div > ul > li > a {
+  color: white;
+}
+
+/* line 189, ../sass/base/_page.scss */
+.views-view-grid span a {
+  border-bottom: none;
+}
+
+/* line 192, ../sass/base/_page.scss */
+div.views-field.views-field-name {
+  width: 69%;
+  float: left;
+}
+/* line 193, ../sass/base/_page.scss */
+div.views-field.views-field-name span a {
+  font-size: 16px;
+  width: 40%;
+  float: left;
+}
+
+/* line 195, ../sass/base/_page.scss */
+div.views-field.views-field-field-aim > span {
+  font-size: 12px;
+}
+
+/* line 196, ../sass/base/_page.scss */
+div.views-field.views-field-field-aim > div {
+  float: right;
+  color: #0061ff;
+  font-size: 10px;
+}
+
+/* line 198, ../sass/base/_page.scss */
+.views-field-field-age {
+  color: #0061ff;
+  margin-right: 13%;
+}
+
+/* line 199, ../sass/base/_page.scss */
+.views-field-field-aim, .views-field-field-gender {
+  float: left;
+  width: 85%;
+}
+/* line 201, ../sass/base/_page.scss */
+.views-field-field-aim .views-label, .views-field-field-gender .views-label {
+  float: left;
+  width: 30%;
+  font-size: 12px;
+}
+
+/* line 203, ../sass/base/_page.scss */
+.views-view-grid span {
+  font-size: 12px;
+  color: grey;
+}
+
+/* line 204, ../sass/base/_page.scss */
+.profile-tag {
+  wiidth: 100%;
+  color: grey;
+}
+
+/* line 205, ../sass/base/_page.scss */
+.views-label {
+  float: left;
+}
+
+/* line 207, ../sass/base/_page.scss */
+div.views-field.views-field-field-gender > div {
+  font-size: 12px;
+  float: right;
+  color: #0061ff;
+}
+
+/* line 208, ../sass/base/_page.scss */
+.user-attr {
+  width: 89%;
+  background-color: #F0FFFF;
+  border-radius: 8px;
+}
+
+/* line 209, ../sass/base/_page.scss */
+.attr-box {
+  padding: 5px 5px 5px 10px;
+  margin-left: 5px;
+}
+
+/* line 211, ../sass/base/_page.scss */
+.gender-v, .aim-v {
+  color: #0061ff !important;
+}
+
+/* line 212, ../sass/base/_page.scss */
+.js-form-item label {
+  color: #e2939a;
+}
+
+/* line 213, ../sass/base/_page.scss */
+#auth_box {
+  width: 19.49153%;
+  float: left;
+  margin-right: 1.69492%;
+  margin-left: 38.13559%;
+}
+
+/* line 221, ../sass/base/_page.scss */
+#auth_box h1#the_logo {
+  text-align: center;
+  margin: 0;
+  padding: 0 0 25px;
+}
+
+/* line 227, ../sass/base/_page.scss */
+#auth_box h2.title {
+  margin: 0;
+  padding: 0 0 15px;
+  font-size: 2em;
+}
+
+/* line 233, ../sass/base/_page.scss */
+#auth_box input[type="text"],
+#auth_box input[type="password"] {
+  border: 1px #ccc solid;
+  border-radius: 3px;
+  padding: 5px;
+  font-size: 15px;
+}
+
+/* line 242, ../sass/base/_page.scss */
+#auth_box input[type="submit"] {
+  float: right;
+}
+
+/* line 248, ../sass/base/_page.scss */
+#auth_box .back_link {
+  padding: 15px 0 0;
+}
+
+/* line 252, ../sass/base/_page.scss */
+#auth_box #bottom_part {
+  font-size: 13px;
+  padding: 15px 0 0;
+}
+
+/* line 2, ../sass/base/_typography.scss */
+html {
+  font-family: 'Helvetica', 'Open Sans', 'Arial', sans-serif;
+}
+
+/* line 6, ../sass/base/_typography.scss */
+a {
+  text-decoration: none;
+}
+/* line 8, ../sass/base/_typography.scss */
+a:hover {
+  color: red;
+}
+
+/* line 13, ../sass/base/_typography.scss */
+h1 {
+  font-size: 40px;
+  font-weight: 400;
+}
+/* line 16, ../sass/base/_typography.scss */
+h1 a:hover {
+  border-bottom: 2px solid;
+}
+
+/* line 21, ../sass/base/_typography.scss */
+h2 {
+  font-size: 34px;
+  font-weight: 400;
+}
+/* line 24, ../sass/base/_typography.scss */
+h2 a:hover {
+  border-bottom: 2px solid;
+}
+
+/* line 29, ../sass/base/_typography.scss */
+h3 {
+  font-size: 26px;
+  font-weight: 400;
+}
+/* line 32, ../sass/base/_typography.scss */
+h3 a:hover {
+  border-bottom: 2px solid;
+}
+
+/* line 37, ../sass/base/_typography.scss */
+h4 {
+  font-size: 22px;
+  font-weight: 700;
+}
+/* line 40, ../sass/base/_typography.scss */
+h4 a:hover {
+  border-bottom: 1px solid;
+}
+
+/* line 48, ../sass/base/_typography.scss */
+p a,
+span a,
+ul li a {
+  border-bottom: 1px solid;
+}
+
+/* line 1, ../sass/components/_lists.scss */
+ul {
+  margin-left: 0px;
+  padding-left: 24px;
+}
+/* line 4, ../sass/components/_lists.scss */
+ul li {
+  line-height: 1.5em;
+}
+
+/* line 9, ../sass/components/_lists.scss */
+ul.menu {
+  margin-left: 0px;
+}
+
+/* No files to import found in layouts/**\/* */

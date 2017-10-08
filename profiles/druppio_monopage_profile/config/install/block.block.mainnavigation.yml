@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.main
+  module:
+    - system
+  theme:
+    - druppio_monopage
+id: mainnavigation
+theme: druppio_monopage
+region: footer
+weight: -10
+provider: null
+plugin: 'system_menu_block:main'
+settings:
+  id: 'system_menu_block:main'
+  label: ''
+  provider: system
+  label_display: visible
+  level: 1
+  depth: 0
+visibility: {  }

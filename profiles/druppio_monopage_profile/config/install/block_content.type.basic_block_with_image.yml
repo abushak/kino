@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+id: basic_block_with_image
+label: 'Basic block with image'
+revision: 0
+description: 'A basic block contains a title, body and image.'

@@ -1,0 +1,27 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: all_node_url_as_title
+label: 'All node URL as title'
+type: 'canonical_entities:node'
+pattern: '[node:title]'
+selection_criteria:
+  5bfb75b6-7174-4ff9-9225-7bc990845c12:
+    id: node_type
+    bundles:
+      article: article
+      header_image: header_image
+      page: page
+      partner: partner
+      quick_link: quick_link
+      service: service
+      testimonial: testimonial
+    negate: false
+    context_mapping:
+      node: node
+    uuid: 5bfb75b6-7174-4ff9-9225-7bc990845c12
+selection_logic: and
+weight: -5
+relationships: {  }

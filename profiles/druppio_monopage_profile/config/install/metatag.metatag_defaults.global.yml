@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies: {  }
+id: global
+label: Global
+tags:
+  shortlink: '[current-page:url:unaliased]'
+  title: '[node:title] | [site:name] | [site:slogan]'
+  keywords: '[current-page:title]'
+  description: '[node:summary]'
+  canonical_url: '[current-page:url:absolute]'
+  og_updated_time: '[node:changed:custom:c]'
+  og_description: '[node:summary]'
+  og_title: '[node:title]'

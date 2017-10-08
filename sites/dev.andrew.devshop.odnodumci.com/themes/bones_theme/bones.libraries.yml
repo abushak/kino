@@ -1,0 +1,18 @@
+global-css:
+  css:
+    theme:
+      css/bones.styles.css: {}
+      css/bones.hacks.css: {}
+
+
+global-js:
+  js:
+    js/bones.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal.ajax
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+
+

@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies: {  }
+name: medium_crop_510_340_
+label: 'Medium crop(500×300)'
+effects:
+  32602d01-39d7-4794-bd58-90296112e1b4:
+    uuid: 32602d01-39d7-4794-bd58-90296112e1b4
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 500
+      height: 300

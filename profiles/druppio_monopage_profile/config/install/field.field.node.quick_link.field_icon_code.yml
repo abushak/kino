@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_icon_code
+    - node.type.quick_link
+id: node.quick_link.field_icon_code
+field_name: field_icon_code
+entity_type: node
+bundle: quick_link
+label: 'Icon code'
+description: 'FontAwsome code'
+required: false
+translatable: false
+default_value:
+  -
+    value: fa-print
+default_value_callback: ''
+settings: {  }
+field_type: string

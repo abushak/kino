@@ -1,0 +1,39 @@
+langcode: en
+status: true
+dependencies: {  }
+id: manager
+label: Manager
+weight: 3
+is_admin: null
+permissions:
+  - 'use text format full_html_without_ckeditor'
+  - 'administer nodes'
+  - 'create article content'
+  - 'delete any article content'
+  - 'delete own article content'
+  - 'delete article revisions'
+  - 'edit any article content'
+  - 'edit own article content'
+  - 'create page content'
+  - 'delete any page content'
+  - 'delete own page content'
+  - 'edit any page content'
+  - 'edit own page content'
+  - 'create quick_link content'
+  - 'delete any quick_link content'
+  - 'delete own quick_link content'
+  - 'edit any quick_link content'
+  - 'edit own quick_link content'
+  - 'create service content'
+  - 'delete any service content'
+  - 'delete own service content'
+  - 'edit any service content'
+  - 'edit own service content'
+  - 'view service revisions'
+  - 'create testimonial content'
+  - 'delete any testimonial content'
+  - 'delete own testimonial content'
+  - 'edit any testimonial content'
+  - 'edit own testimonial content'
+  - 'view the administration theme'
+  - 'access toolbar'

@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_color
+    - node.type.quick_link
+  module:
+    - color_field
+id: node.quick_link.field_color
+field_name: field_color
+entity_type: node
+bundle: quick_link
+label: Color
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  opacity: 0
+field_type: color_field_type

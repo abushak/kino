@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - contact_block
+  theme:
+    - druppio_monopage
+id: contactblock
+theme: druppio_monopage
+region: footer_second
+weight: -9
+provider: null
+plugin: contact_block
+settings:
+  id: contact_block
+  label: 'Contact block'
+  provider: contact_block
+  label_display: '0'
+  contact_form: feedback
+visibility: {  }

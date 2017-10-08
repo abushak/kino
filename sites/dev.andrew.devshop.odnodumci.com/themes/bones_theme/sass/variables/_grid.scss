@@ -1,0 +1,142 @@
+@import "compass/css3";
+
+// grab susy
+@import 'susy';
+
+// some vars
+$breakpoints: (lap: 768px, desk: 1024px);
+$base-spacing-unit: 20px;
+
+$susy: (
+  columns: 12,
+  gutters: 1/4,
+);
+
+$main-layout: layout(12 1/4 isolate);
+$asym-layout: layout((1 2 3 4 3 2 2) no-gutters isolate);
+
+// some mixins
+@mixin clearfix() {
+  &:before,
+  &:after {
+    content: " ";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+@mixin mq($name) {
+  $size: map-get($breakpoints, $name);
+  @media screen and (min-width: $size) {
+    @content;
+  }
+}
+
+// mini reset
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+// html and body
+html, body {
+  min-height: 100%;
+}
+
+body {
+  color: #414141;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 100%;
+  font-weight: 100;
+  line-height: 1.5;
+}
+
+// vertical rhythm
+h1, h2, h3, h4, h5, h6, p, ol, ul {
+  margin-bottom: $base-spacing-unit;
+}
+
+// headers
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 300;
+  letter-spacing: 2px;
+}
+
+// links
+a {
+  color: #01579B;
+}
+
+// layout
+.container {
+  @include clearfix;
+  max-width: 1200px;
+  width: 90%;
+  margin: auto;
+}
+
+
+// layouts
+.layout-container {
+  @include clearfix;
+  
+  
+
+  &:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+}
+
+.layout-container__titllayoute {
+  margin-bottom: 6px;
+}
+
+.main,
+.sidebar {
+  margin-bottom: $base-spacing-unit;
+  padding: $base-spacing-unit;
+  border: 3px solid #B3E5FC;
+
+  @include mq(lap) {
+    min-height: 300px;
+  }
+}
+
+
+@include with-layout($main-layout) {
+  .layout-container {
+    .main {
+      @include mq(lap) {
+        @include span(50% at 25%);
+      }
+    }
+	.filter-wr,.region-footer {
+      @include mq(lap) {
+        @include span(75% at 11%);
+      }
+    }
+	
+	#user-login-form {
+		width:20%;
+		color:red;
+	}
+	  
+	
+
+    .layout-left-sidebar {
+      @include mq(lap) {
+        @include span(20% first);
+      }
+    }
+
+    .layout-right-sidebar {
+      @include mq(lap) {
+        @include span(20% last);
+      }
+    }
+  }
+}

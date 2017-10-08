@@ -1,0 +1,29 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.services
+  module:
+    - system
+    - views
+  theme:
+    - druppio_monopage
+id: views_block__services_block_1
+theme: druppio_monopage
+region: content_bottom
+weight: -11
+provider: null
+plugin: 'views_block:services-block_1'
+settings:
+  id: 'views_block:services-block_1'
+  label: 'Our Services'
+  provider: views
+  label_display: visible
+  views_label: 'Our Services'
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

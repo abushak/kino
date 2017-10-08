@@ -1,0 +1,40 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.basic_block_with_image
+    - field.field.block_content.basic_block_with_image.body
+    - field.field.block_content.basic_block_with_image.field_background_image
+    - field.field.block_content.basic_block_with_image.field_image
+    - image.style.medium_crop_510_340_
+  module:
+    - image
+    - text
+id: block_content.basic_block_with_image.default
+targetEntityType: block_content
+bundle: basic_block_with_image
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+  field_background_image:
+    weight: 2
+    label: hidden
+    settings:
+      image_style: ''
+      image_link: ''
+    third_party_settings: {  }
+    type: image
+  field_image:
+    weight: 1
+    label: hidden
+    settings:
+      image_style: medium_crop_510_340_
+      image_link: ''
+    third_party_settings: {  }
+    type: image
+hidden: {  }

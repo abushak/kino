@@ -1,0 +1,116 @@
+/**
+ * @file
+ * Form and form elements styles.
+ */
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="search"],
+input[type="tel"],
+input[type="url"],
+input[type="number"],
+input[type="date"],
+input[type="month"],
+input[type="week"],
+input[type="time"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[autofocus],
+input[required],
+textarea,
+select {
+  $active-border: darken($input-border, 12%);
+
+  display: block;
+  max-width: 100%;
+  width: auto;
+  padding: $input-btn-padding-y $input-btn-padding-x;
+  line-height: $input-btn-line-height;
+  background-color: $input-bg;
+  border-width: 1px;
+  border-style: solid;
+  border-color: $input-border;
+  border-radius: $input-border-radius;
+  box-sizing: border-box;
+  transition: all .2s ease-in-out;
+  @if ($input-enable-shadows) {
+    box-shadow: $input-box-shadow;
+  }
+
+  &.error {
+    border-color: #e74c3c;
+  }
+
+  &:focus,
+  &:hover {
+    border-color: $active-border;
+  }
+
+  &:focus {
+    outline: medium none;
+    @if ($input-enable-shadows) {
+      box-shadow: $input-focus-box-shadow;
+    }
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    background: $input-bg-disabled;
+    font-size: 100%;
+    color: $input-color-disabled;
+    text-shadow: none;
+  }
+}
+
+input[type="checkbox"] {
+  display: inline-block;
+}
+
+textarea {
+  height: auto;
+}
+
+select {
+  @include gradient-y(white, #f9f9f9);
+}
+
+label {
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: rem(5);
+  font-weight: bold;
+}
+
+.field-label-inline {
+  display: inline-block;
+}
+
+/**
+ * Drupal specific styles.
+ */
+.form-item {
+  margin: 0;
+  padding: 0 0 $form-item-padding 0;
+  .description {
+    display: block;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    color: lighten($text-color, 25%);
+  }
+}
+
+.form-actions {
+  input {
+    margin: 0 rem(6) 0 0;
+    &:last-child {
+      margin: 0;
+    }
+  }
+}
+
+// Fix tabledrag handle.
+a.tabledrag-handle .handle {		
+  height: rem(24);		
+  width: rem(20);		
+}

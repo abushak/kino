@@ -1,0 +1,38 @@
+    <div class="center">
+
+         <div id="top_part"></div>
+
+    </div>
+
+<div id="auth_box" class="login">
+
+
+
+
+  <div id="middle_part">
+       {{ page.content }}
+  <div class="password_link">
+      <a href="{{ path('user.pass') }}">{{ 'Forgot your password?'|t }}</a>
+    </div>
+
+    <div class="register_link">
+      <a href="{{ path('user.register') }}">{{ 'Register a new account'|t }}</a>
+    </div>
+
+    <div class="back_link">
+      <a href="{{ url('<front>') }}">&larr; {{ 'Back'|t }} {{ site_name }}</a>
+    </div>
+
+
+  </div>
+
+
+</div>
+
+
+
+
+
+
+
+

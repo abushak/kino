@@ -1,0 +1,18 @@
+bones_3col_stacked_wrapped_equal_width:
+  label: Three column wrapped -stacked - equal width
+  category: Bones
+  class: '\Drupal\ds\Plugin\DsLayout'
+  type: partial
+  template: layouts/bones-3col-stacked-wrapped-equal-width
+  icon: images/ds-3col-stacked-equal-width.png
+  regions:
+    header:
+      label: Header
+    left:
+      label: Left
+    middle:
+      label: Middle
+    right:
+      label: Right
+    footer:
+      label: Footer
